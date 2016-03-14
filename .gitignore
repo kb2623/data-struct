@@ -10,3 +10,20 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Ignore gradle build directory
+build/
+
+# Ignore gradle directory
+.gradle/
+
+# Ignore tags files
+*.tags
+
+# Idea folder
+.idea/
+*.iml
+
+# Ignore swap files
+.*.swp
+.*.swo
