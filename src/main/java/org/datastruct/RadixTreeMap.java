@@ -25,7 +25,7 @@ public class RadixTreeMap<K extends CharSequence, V> implements NavigableMap<K, 
 
 	private K linkKey(K k1, K k2) {
 		StringBuilder buff = new StringBuilder();
-		buff.append(k1).append(k2);
+		buff.append(k1 != null ? k1 : "").append(k2 != null ? k2 : "");
 		return (K) buff.subSequence(0, buff.length());
 	}
 
@@ -655,9 +655,29 @@ public class RadixTreeMap<K extends CharSequence, V> implements NavigableMap<K, 
 		} else if (key == null) {
 			throw new NullPointerException();
 		} else {
-			// TODO: 2/1/16
-			return null;
+			return ceiling(key);
 		}
+	}
+
+	private Entry<K, V> ceiling(K key) {
+		K ckey = key, fkey = null;
+		RadixEntry curr = rootNode;
+		Stack<RadixEntry> sNode = new org.datastruct.Stack<>();
+		Stack<Integer> sKeyLens = new org.datastruct.Stack<>();
+		while (curr != null) {
+			int cmp = this.cmp.compare(curr.key, ckey);
+			if (cmp == ckey.length() && cmp == curr.key.length()) {
+				return new RadixEntry(curr.data, linkKey(fkey, ckey));
+			} else if (cmp < ckey.length() && cmp == curr.key.length()) {
+				fkey = linkKey(fkey, (K) ckey.subSequence(0, cmp));
+				ckey = (K) ckey.subSequence(cmp, ckey.length());
+				curr = curr.children.get(ckey.charAt(0));
+
+			} else {
+				curr = null;
+			}
+		}
+		return null;
 	}
 
 	@Override

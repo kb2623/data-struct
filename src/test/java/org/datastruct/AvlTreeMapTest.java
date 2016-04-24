@@ -13,7 +13,7 @@ public class AvlTreeMapTest {
 	private NavigableMap<Integer, Integer> map;
 	private NavigableMap<Integer, Integer> tmap;
 
-	private int size = 1000;
+	private int size = 10000;
 
 	@Before
 	public void setUp() throws Exception {

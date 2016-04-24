@@ -4,7 +4,7 @@ import java.util.*;
 
 public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 
-	private AVLEntry<K, V> root;
+	private AVLEntry root;
 	private CompareKey<K> keyCmp;
 
 	public AvlTreeMap() {
@@ -20,8 +20,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	public int size() {
 		if (!isEmpty()) {
 			int size = 0;
-			Stack<AVLEntry<K, V>> stack = new Stack<>();
-			AVLEntry<K, V> curr = root;
+			Stack<AVLEntry> stack = new Stack<>();
+			AVLEntry curr = root;
 			while (!stack.isEmpty() || curr != null) {
 				if (curr != null) {
 					size++;
@@ -52,7 +52,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			return false;
 		}
 		K key = (K) o;
-		AVLEntry<K, V> curr = root;
+		AVLEntry curr = root;
 		while (true) {
 			int cmp = keyCmp.compare(key, curr.key);
 			if (cmp == 0) {
@@ -76,8 +76,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public boolean containsValue(Object o) {
 		V value = (V) o;
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		while (!stack.isEmpty() || curr != null) {
 			if (curr != null) {
 				if (curr.value.equals(value)) {
@@ -101,7 +101,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			return null;
 		}
 		K key = (K) o;
-		AVLEntry<K, V> curr = root;
+		AVLEntry curr = root;
 		while (true) {
 			int cmp = keyCmp.compare(key, curr.key);
 			if (cmp == 0) {
@@ -127,11 +127,11 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		if (key == null) {
 			throw new NullPointerException();
 		} else if (isEmpty()) {
-			root = new AVLEntry<>(key, value);
+			root = new AVLEntry(key, value);
 			return null;
 		}
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		int cmp;
 		while (true) {
 			cmp = keyCmp.compare(key, curr.key);
@@ -153,17 +153,17 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			}
 		}
 		if (cmp > 0) {
-			curr.higher = new AVLEntry<>(key, value);
+			curr.higher = new AVLEntry(key, value);
 		} else {
-			curr.lower = new AVLEntry<>(key, value);
+			curr.lower = new AVLEntry(key, value);
 		}
 		updateTree(stack);
 		return null;
 	}
 
-	private void updateTree(Stack<AVLEntry<K, V>> stack) {
+	private void updateTree(Stack<AVLEntry> stack) {
 		int cmp;
-		AVLEntry<K, V> curr;
+		AVLEntry curr;
 		while (!stack.isEmpty()) {
 			curr = stack.pop();
 			cmp = curr.getBalance();
@@ -176,21 +176,19 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 					stack.peek().higher = rotate(curr, cmp);
 				}
 				return;
-			} else {
-				curr.updataHeight();
 			}
 		}
 	}
 
-	private AVLEntry<K, V> rotate(AVLEntry<K, V> node, int cmp) {
+	private AVLEntry rotate(AVLEntry node, int cmp) {
 		if (cmp < 0) {
-			AVLEntry<K, V> cNode = node.higher;
+			AVLEntry cNode = node.higher;
 			if (cNode.getBalance() > 0) {
 				node.higher = rotateRight(cNode);
 			}
 			return rotateLeft(node);
 		} else {
-			AVLEntry<K, V> cNode = node.lower;
+			AVLEntry cNode = node.lower;
 			if (cNode.getBalance() < 0) {
 				node.lower = rotateLeft(cNode);
 			}
@@ -198,21 +196,17 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		}
 	}
 
-	private AVLEntry<K, V> rotateLeft(AVLEntry<K, V> node) {
-		AVLEntry<K, V> nRoot = node.higher;
+	private AVLEntry rotateLeft(AVLEntry node) {
+		AVLEntry nRoot = node.higher;
 		node.higher = nRoot.lower;
 		nRoot.lower = node;
-		node.updataHeight();
-		nRoot.updataHeight();
 		return nRoot;
 	}
 
-	private AVLEntry<K, V> rotateRight(AVLEntry<K, V> node) {
-		AVLEntry<K, V> nRoot = node.lower;
+	private AVLEntry rotateRight(AVLEntry node) {
+		AVLEntry nRoot = node.lower;
 		node.lower = nRoot.higher;
 		nRoot.higher = node;
-		node.updataHeight();
-		nRoot.updataHeight();
 		return nRoot;
 	}
 
@@ -224,8 +218,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			return null;
 		}
 		K key = (K) o;
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> found = findNode(key, stack);
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry found = findNode(key, stack);
 		if (found != null) {
 			return deleteFoundNode(found, stack).getValue();
 		} else {
@@ -233,8 +227,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		}
 	}
 
-	private AVLEntry<K, V> findNode(final K key, final Stack<AVLEntry<K, V>> stack) {
-		AVLEntry<K, V> found = root;
+	private AVLEntry findNode(final K key, final Stack<AVLEntry> stack) {
+		AVLEntry found = root;
 		while (true) {
 			stack.push(found);
 			int cmp = keyCmp.compare(key, found.key);
@@ -257,9 +251,9 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		return found;
 	}
 
-	private Map.Entry<K, V> deleteFoundNode(final AVLEntry<K, V> node, final Stack<AVLEntry<K, V>> stack) {
-		AVLEntry<K, V> retNode = node;
-		AVLEntry<K, V> minNode = node;
+	private Map.Entry<K, V> deleteFoundNode(final AVLEntry node, final Stack<AVLEntry> stack) {
+		AVLEntry retNode = node;
+		AVLEntry minNode = node;
 		if (node.lower != null) {
 			minNode = node.lower;
 			if (minNode.higher != null) {
@@ -305,7 +299,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		return retNode;
 	}
 
-	private AVLEntry<K, V> replaceValues(AVLEntry<K, V> n1, AVLEntry<K, V> n2) {
+	private AVLEntry replaceValues(AVLEntry n1, AVLEntry n2) {
 		K key = n1.key;
 		V value = n1.value;
 		n1.setKeyValue(n2.key, n2.value);
@@ -327,8 +321,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public Set<K> keySet() {
 		Set<K> set = new HashSet<>(size());
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		while (!stack.isEmpty() || curr != null) {
 			if (curr != null) {
 				stack.push(curr);
@@ -345,8 +339,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public Collection<V> values() {
 		Collection<V> c = new ArrayList<>(size());
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		while (!stack.isEmpty() || curr != null) {
 			if (curr != null) {
 				stack.push(curr);
@@ -363,8 +357,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public Set<Entry<K, V>> entrySet() {
 		Set<Map.Entry<K, V>> set = new HashSet<>(size());
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		while (!stack.isEmpty() || curr != null) {
 			if (curr != null) {
 				stack.push(curr);
@@ -382,8 +376,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = root;
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = root;
 		while (!stack.isEmpty() || curr != null) {
 			if (curr != null) {
 				stack.push(curr);
@@ -406,10 +400,10 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	public String printTree() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
-		LinkQueue<AVLEntry<K, V>> queue = new LinkQueue<>();
-		AVLEntry<K, V> curr = root;
+		LinkQueue<AVLEntry> queue = new LinkQueue<>();
+		AVLEntry curr = root;
 		while (!queue.isEmpty() || curr != null) {
-			builder.append(curr.key).append(':').append(curr.height).append(", ");
+			builder.append(curr.key).append(':').append(curr.getHeight()).append(", ");
 			if (curr.lower != null) {
 				queue.offer(curr.lower);
 			}
@@ -432,9 +426,9 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		} else if (isEmpty()) {
 			return null;
 		}
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
+		Stack<AVLEntry> stack = new Stack<>();
 		findNode(key, stack);
-		AVLEntry<K, V> e = stack.pop();
+		AVLEntry e = stack.pop();
 		if (e.lower != null && keyCmp.compare(key, e.key) <= 0) {
 			e = e.lower;
 			while (e.higher != null) {
@@ -471,8 +465,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		} else if (isEmpty()) {
 			return null;
 		}
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> e = findNode(key, stack);
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry e = findNode(key, stack);
 		if (e != null) {
 			return e;
 		}
@@ -505,8 +499,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		} else if (isEmpty()) {
 			return null;
 		}
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
-		AVLEntry<K, V> curr = findNode(key, stack);
+		Stack<AVLEntry> stack = new Stack<>();
+		AVLEntry curr = findNode(key, stack);
 		if (curr != null) {
 			return curr;
 		}
@@ -548,9 +542,9 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		} else if (isEmpty()) {
 			return null;
 		}
-		Stack<AVLEntry<K, V>> stack = new Stack<>();
+		Stack<AVLEntry> stack = new Stack<>();
 		findNode(key, stack);
-		AVLEntry<K, V> e = stack.pop();
+		AVLEntry e = stack.pop();
 		if (keyCmp.compare(key, e.key) < 0) {
 			return e;
 		} else if (e.higher != null) {
@@ -585,7 +579,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public Entry<K, V> firstEntry() {
 		if (!isEmpty()) {
-			AVLEntry<K, V> curr = root;
+			AVLEntry curr = root;
 			while (true) {
 				if (curr.lower != null) {
 					curr = curr.lower;
@@ -600,7 +594,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 	@Override
 	public Entry<K, V> lastEntry() {
 		if (!isEmpty()) {
-			AVLEntry<K, V> curr = root;
+			AVLEntry curr = root;
 			while (true) {
 				if (curr.higher != null) {
 					curr = curr.higher;
@@ -617,8 +611,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		if (isEmpty()) {
 			return null;
 		} else {
-			Stack<AVLEntry<K, V>> stack = new Stack<>();
-			AVLEntry<K, V> found = root;
+			Stack<AVLEntry> stack = new Stack<>();
+			AVLEntry found = root;
 			while (true) {
 				stack.push(found);
 				if (found.lower != null) {
@@ -636,8 +630,8 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		if (isEmpty()) {
 			return null;
 		} else {
-			Stack<AVLEntry<K, V>> stack = new Stack<>();
-			AVLEntry<K, V> found = root;
+			Stack<AVLEntry> stack = new Stack<>();
+			AVLEntry found = root;
 			while (true) {
 				stack.push(found);
 				if (found.higher != null) {
@@ -694,7 +688,7 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		return map;
 	}
 
-	private void subMap(AVLEntry<K, V> e, NavigableMap<K, V> map, K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
+	private void subMap(AVLEntry e, NavigableMap<K, V> map, K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
 		boolean test1 = fromKey != null ? (fromInclusive ? keyCmp.compare(fromKey, e.key) <= 0 : keyCmp.compare(fromKey, e.key) < 0) : true;
 		boolean test2 = toKey != null ? (toInclusive ? keyCmp.compare(toKey, e.key) >= 0 : keyCmp.compare(toKey, e.key) > 0) : true;
 		if (test1 && test2) {
@@ -819,39 +813,45 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		}
 	}
 
-	class AVLEntry<K, V> implements Map.Entry<K, V> {
+	class AVLEntry implements Map.Entry<K, V> {
 
 		K key;
 		V value;
-		AVLEntry<K, V> lower;
-		AVLEntry<K, V> higher;
-		int height;
+		AVLEntry lower;
+		AVLEntry higher;
 
-		private AVLEntry(K key, V value, AVLEntry<K, V> lower, AVLEntry<K, V> higher, int depth) {
+		private AVLEntry(K key, V value, AVLEntry lower, AVLEntry higher) {
 			this.key = key;
 			this.value = value;
 			this.lower = lower;
 			this.higher = higher;
-			this.height = depth;
 		}
 
 		private AVLEntry(K key, V value) {
-			this(key, value, null, null, 1);
+			this(key, value, null, null);
 		}
 
-		private int getBalance() {
-			return (lower != null ? lower.height : 0) - (higher != null ? higher.height : 0);
-		}
-
-		private void updataHeight() {
-			if ((lower != null ? lower.height : 0) >= (higher != null ? higher.height : 0)) {
-				height = (lower != null ? lower.height : 0) + 1;
+		private int getHeight() {
+			int height_lower = 1;
+			int height_higher = 1;
+			if (lower != null) {
+				height_lower += lower.getHeight();
+			}
+			if (higher != null) {
+				height_higher += higher.getHeight();
+			}
+			if (height_lower >= height_higher) {
+				return height_lower;
 			} else {
-				height = (higher != null ? higher.height : 0) + 1;
+				return height_higher;
 			}
 		}
 
-		private AVLEntry<K, V> setKeyValue(K key, V value) {
+		private int getBalance() {
+			return (lower != null ? lower.getHeight() : 0) - (higher != null ? higher.getHeight() : 0);
+		}
+
+		private AVLEntry setKeyValue(K key, V value) {
 			this.key = key;
 			this.value = value;
 			return this;
@@ -876,16 +876,16 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
-			AVLEntry<K, V> lower = this.lower != null ? (AVLEntry<K, V>) this.lower.clone() : null;
-			AVLEntry<K, V> higher = this.higher != null ? (AVLEntry<K, V>) this.higher.clone() : null;
-			return new AVLEntry<>(key, value, lower, higher, height);
+			AVLEntry lower = this.lower != null ? (AVLEntry) this.lower.clone() : null;
+			AVLEntry higher = this.higher != null ? (AVLEntry) this.higher.clone() : null;
+			return new AVLEntry(key, value, lower, higher);
 		}
 
 		@Override
 		public boolean equals(Object o) {
-			if (o == null || !(o instanceof AVLEntry)) return false;
+			if (o == null) return false;
 			if (this == o) return true;
-			AVLEntry<?, ?> that = (AVLEntry<?, ?>) o;
+			AVLEntry that = (AVLEntry) o;
 			return getKey() != null ? getKey().equals(that.getKey()) : that.getKey() == null &&
 					getValue() != null ? getValue().equals(that.getValue()) : that.getValue() == null;
 		}

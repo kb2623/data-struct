@@ -246,6 +246,32 @@ public class RadixTreeMapTestMap {
 		}
 	}
 
+	private void testAddMoreOK() {
+		map.put("romane", 1d);
+		map.put("romanus", 2d);
+		map.put("romulus", 3d);
+		map.put("rubens", 4d);
+		map.put("ruber", 5d);
+		map.put("rubicon", 6d);
+		map.put("rubicudus", 7d);
+		assertEquals(new Double(4), map.get("rubens"));
+		assertEquals(new Double(7), map.get("rubicudus"));
+		assertEquals(new Double(1), map.get("romane"));
+		assertEquals(new Double(5), map.get("ruber"));
+		assertEquals(new Double(2), map.get("romanus"));
+		assertEquals(new Double(6), map.get("rubicon"));
+		assertEquals(new Double(3), map.get("romulus"));
+	}
+
+	@Test
+	public void testCellingKey() {
+		testAddMoreOK();
+		((RadixTreeMap) map).printTree();
+		assertEquals(null, map.ceilingEntry("zak"));
+		assertEquals("romulus", map.ceilingKey("romulus"));
+		assertEquals("rubens", map.ceilingKey("romulusz"));
+	}
+
 	/*
 	@Test
 	@Ignore
