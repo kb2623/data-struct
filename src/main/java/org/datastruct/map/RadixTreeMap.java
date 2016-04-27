@@ -1,6 +1,5 @@
 package org.datastruct.map;
 
-import org.datastruct.SkipMap;
 import org.datastruct.Stack;
 
 import java.util.*;

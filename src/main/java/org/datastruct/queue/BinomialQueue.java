@@ -1,4 +1,6 @@
-package org.datastruct;
+package org.datastruct.queue;
+
+import org.datastruct.Stack;
 
 import java.util.Comparator;
 import java.util.Iterator;

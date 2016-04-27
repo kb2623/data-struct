@@ -1,4 +1,4 @@
-package org.datastruct;
+package org.datastruct.queue;
 
 import org.junit.After;
 import org.junit.Before;

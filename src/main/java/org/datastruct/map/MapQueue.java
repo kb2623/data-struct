@@ -1,4 +1,4 @@
-package org.datastruct;
+package org.datastruct.map;
 
 import java.util.Comparator;
 import java.util.Iterator;

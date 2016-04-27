@@ -1,4 +1,4 @@
-package org.datastruct;
+package org.datastruct.queue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -1,6 +1,6 @@
 package org.datastruct.set;
 
-import org.datastruct.LinkQueue;
+import org.datastruct.queue.LinkQueue;
 
 import java.util.*;
 
