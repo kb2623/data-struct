@@ -1,4 +1,4 @@
-package org.datastruct;
+package org.datastruct.map;
 
 import org.junit.Before;
 import org.junit.Test;

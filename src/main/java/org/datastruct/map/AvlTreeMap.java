@@ -1,4 +1,7 @@
-package org.datastruct;
+package org.datastruct.map;
+
+import org.datastruct.LinkQueue;
+import org.datastruct.Stack;
 
 import java.util.*;
 

@@ -1,4 +1,7 @@
-package org.datastruct;
+package org.datastruct.map;
+
+import org.datastruct.SkipMap;
+import org.datastruct.Stack;
 
 import java.util.*;
 
@@ -662,8 +665,8 @@ public class RadixTreeMap<K extends CharSequence, V> implements NavigableMap<K, 
 	private Entry<K, V> ceiling(K key) {
 		K ckey = key, fkey = null;
 		RadixEntry curr = rootNode;
-		Stack<RadixEntry> sNode = new org.datastruct.Stack<>();
-		Stack<Integer> sKeyLens = new org.datastruct.Stack<>();
+		Stack<RadixEntry> sNode = new Stack<>();
+		Stack<Integer> sKeyLens = new Stack<>();
 		while (curr != null) {
 			int cmp = this.cmp.compare(curr.key, ckey);
 			if (cmp == ckey.length() && cmp == curr.key.length()) {

@@ -1,4 +1,4 @@
-package org.datastruct;
+package org.datastruct.map;
 
 import org.datastruct.exception.MapFullException;
 
