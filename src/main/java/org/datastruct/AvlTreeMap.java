@@ -50,24 +50,25 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			throw new NullPointerException();
 		} else if (isEmpty()) {
 			return false;
-		}
-		K key = (K) o;
-		AVLEntry curr = root;
-		while (true) {
-			int cmp = keyCmp.compare(key, curr.key);
-			if (cmp == 0) {
-				return true;
-			} else if (cmp > 0) {
-				if (curr.higher != null) {
-					curr = curr.higher;
+		} else {
+			K key = (K) o;
+			AVLEntry curr = root;
+			while (true) {
+				int cmp = keyCmp.compare(key, curr.key);
+				if (cmp == 0) {
+					return true;
+				} else if (cmp > 0) {
+					if (curr.higher != null) {
+						curr = curr.higher;
+					} else {
+						return false;
+					}
 				} else {
-					return false;
-				}
-			} else {
-				if (curr.lower != null) {
-					curr = curr.lower;
-				} else {
-					return false;
+					if (curr.lower != null) {
+						curr = curr.lower;
+					} else {
+						return false;
+					}
 				}
 			}
 		}
@@ -99,24 +100,25 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			throw new NullPointerException();
 		} else if (isEmpty()) {
 			return null;
-		}
-		K key = (K) o;
-		AVLEntry curr = root;
-		while (true) {
-			int cmp = keyCmp.compare(key, curr.key);
-			if (cmp == 0) {
-				return curr.value;
-			} else if (cmp > 0) {
-				if (curr.higher != null) {
-					curr = curr.higher;
+		} else {
+			K key = (K) o;
+			AVLEntry curr = root;
+			while (true) {
+				int cmp = keyCmp.compare(key, curr.key);
+				if (cmp == 0) {
+					return curr.value;
+				} else if (cmp > 0) {
+					if (curr.higher != null) {
+						curr = curr.higher;
+					} else {
+						return null;
+					}
 				} else {
-					return null;
-				}
-			} else {
-				if (curr.lower != null) {
-					curr = curr.lower;
-				} else {
-					return null;
+					if (curr.lower != null) {
+						curr = curr.lower;
+					} else {
+						return null;
+					}
 				}
 			}
 		}
@@ -129,36 +131,37 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 		} else if (isEmpty()) {
 			root = new AVLEntry(key, value);
 			return null;
-		}
-		Stack<AVLEntry> stack = new Stack<>();
-		AVLEntry curr = root;
-		int cmp;
-		while (true) {
-			cmp = keyCmp.compare(key, curr.key);
-			stack.push(curr);
-			if (cmp == 0) {
-				return curr.setValue(value);
-			} else if (cmp > 0) {
-				if (curr.higher != null) {
-					curr = curr.higher;
+		} else {
+			Stack<AVLEntry> stack = new Stack<>();
+			AVLEntry curr = root;
+			int cmp;
+			while (true) {
+				cmp = keyCmp.compare(key, curr.key);
+				stack.push(curr);
+				if (cmp == 0) {
+					return curr.setValue(value);
+				} else if (cmp > 0) {
+					if (curr.higher != null) {
+						curr = curr.higher;
+					} else {
+						break;
+					}
 				} else {
-					break;
-				}
-			} else {
-				if (curr.lower != null) {
-					curr = curr.lower;
-				} else {
-					break;
+					if (curr.lower != null) {
+						curr = curr.lower;
+					} else {
+						break;
+					}
 				}
 			}
+			if (cmp > 0) {
+				curr.higher = new AVLEntry(key, value);
+			} else {
+				curr.lower = new AVLEntry(key, value);
+			}
+			updateTree(stack);
+			return null;
 		}
-		if (cmp > 0) {
-			curr.higher = new AVLEntry(key, value);
-		} else {
-			curr.lower = new AVLEntry(key, value);
-		}
-		updateTree(stack);
-		return null;
 	}
 
 	private void updateTree(Stack<AVLEntry> stack) {
@@ -216,14 +219,15 @@ public class AvlTreeMap<K, V> implements NavigableMap<K, V> {
 			throw new NullPointerException();
 		} else if (isEmpty()) {
 			return null;
-		}
-		K key = (K) o;
-		Stack<AVLEntry> stack = new Stack<>();
-		AVLEntry found = findNode(key, stack);
-		if (found != null) {
-			return deleteFoundNode(found, stack).getValue();
 		} else {
-			return null;
+			K key = (K) o;
+			Stack<AVLEntry> stack = new Stack<>();
+			AVLEntry found = findNode(key, stack);
+			if (found != null) {
+				return deleteFoundNode(found, stack).getValue();
+			} else {
+				return null;
+			}
 		}
 	}
 
