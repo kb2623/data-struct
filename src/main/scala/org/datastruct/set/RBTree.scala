@@ -3,10 +3,33 @@ package org.datastruct.set
 import java.io.{File, PrintWriter}
 import scala.collection.mutable
 
-class RBTree[T](
-	var root: RBNode[T] = null
-)(implicit dataType: T => Ordered[T]) extends mutable.Set[T] {
-	private def leftRotate(x: RBNode[T]) {
+class RBTree[T <: Ordered[T]] extends mutable.Set[T] {
+
+	object RBNodeColor {
+		val RED = false
+		val BLACK = true
+	}
+
+	case class Node[T <: Ordered[T]] (
+		var data: T,
+		var parent: RBTree[T]#Node[T] = null,
+		var left: RBTree[T]#Node[T] = null,
+		var right: RBTree[T]#Node[T] = null,
+		var color: Boolean = RBNodeColor.RED
+	) {
+		def toDotNode(id: Int) = "S" + id + " [style=filled, label=\"" + data.toString + "\", fillcolor=" + (if (color == RBNodeColor.RED) "red" else "black") + ", shape=circle, fontcolor=yellow];\n"
+
+		def toDotEdge(ids: Int*) = (if (ids(1) != -1) "S" + ids(0) + " -> S" + ids(1) + ";\n" else "") + (if (ids(2) != -1) "S" + ids(0) + " -> S" + ids(2) + ";\n" else "")
+	}
+
+	var root: RBTree[T]#Node[T] = null
+
+	def this(root: RBTree[T]#Node[T]) {
+		this()
+		this.root = root
+	}
+
+	private def leftRotate(x: RBTree[T]#Node[T]) {
 		var y = x.right
 		x.right = y.left
 		if (y.left != null) {
@@ -24,7 +47,7 @@ class RBTree[T](
 		x.parent = y
 	}
 
-	private def rightRotate(y: RBNode[T]) {
+	private def rightRotate(y: RBTree[T]#Node[T]) {
 		var x = y.left
 		y.left = x.right
 		if (x.right != null) {
@@ -42,7 +65,7 @@ class RBTree[T](
 		y.parent = x
 	}
 
-	private def rbInsertFixup(zi: RBNode[T]) {
+	private def rbInsertFixup(zi: RBTree[T]#Node[T]) {
 		var z = zi
 		var y = root
 		while ((z != root) && (z.parent.color == RBNodeColor.RED)) {
@@ -101,7 +124,7 @@ class RBTree[T](
 				throw new IllegalArgumentException("Key " + data + " exists!!!")
 			}
 		}
-		var z = new RBNode[T](data)
+		var z = Node[T](data)
 		z.parent = y
 		if (y == null) {
 			root = z
@@ -114,7 +137,7 @@ class RBTree[T](
 		this
 	}
 
-	private def rbDeleteFixup(ix: RBNode[T]) {
+	private def rbDeleteFixup(ix: RBTree[T]#Node[T]) {
 		var x = ix
 		var w = root
 		while (root != x && x.color == RBNodeColor.BLACK) {
@@ -245,11 +268,11 @@ class RBTree[T](
 
 	override def isEmpty: Boolean = if (root != null) false else true
 
-	private def count(node: RBNode[T]): Int = if (node == null) 0 else 1 + count(node.left) + count(node.right)
+	private def count(node: RBTree[T]#Node[T]): Int = if (node == null) 0 else 1 + count(node.left) + count(node.right)
 
 	override def size = count(root)
 
-	private def toDot(data: StringBuilder, node: RBNode[T], id: Int): (Int, Int) = {
+	private def toDot(data: StringBuilder, node: RBTree[T]#Node[T], id: Int): (Int, Int) = {
 		if (node == null) (-1, -1)
 		else {
 			data ++= node.toDotNode(id)
