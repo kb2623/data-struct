@@ -1,6 +1,6 @@
 package org.datastruct.concurrent;
 
-import org.datastruct.AvlTreeMap;
+import org.datastruct.map.AvlTreeMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

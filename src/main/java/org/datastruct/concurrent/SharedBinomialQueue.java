@@ -1,6 +1,6 @@
 package org.datastruct.concurrent;
 
-import org.datastruct.BinomialQueue;
+import org.datastruct.queue.BinomialQueue;
 
 import java.util.Comparator;
 import java.util.Iterator;
